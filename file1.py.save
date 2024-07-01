@@ -1,0 +1,45 @@
+import speech_recognition as sr
+import os
+def execute_command(command):
+    if command.lower() == "home":
+        file = os.path.expanduser("~")
+        print(file)
+    elif command.lower() == "directories":
+        dirs = []
+        for dir in os.listdir(os.path.expanduser("~")):
+            if os.path.isdir(os.path.join(os.path.expanduser("~"),dir)):
+                dirs.append(dir)
+        print(dirs)
+    elif command.lower() == "files of homework":
+        f = os.path.expanduser("~")
+        l = os.listdir(os.path.join(f,"homework"))
+        for i in l:
+            if i.endswith(".py"):
+                print(i)
+    elif command.lower() == "files of class work":
+        f = os.path.expanduser("~")
+        l = os.listdir(os.path.join(f,"classwork"))
+        print(l)
+    elif command.lower() == "size":
+        f = os.path.expanduser("`")
+        l = os.listdir(os.path.join(f,"homework"))
+        for i in l:
+            if os.path.getsize(i) < 500:
+                print(i)
+    else:
+        print("no command")
+
+recognizer = sr.Recognizer()
+
+with sr.Microphone() as source:
+    print("say...")
+    audio = recognizer.listen(source)
+
+    try:
+        command = recognizer.recognize_google(audio,language = "en - US")
+        print("you say: " + command)
+        execute_command(command)
+    except sr.UnknownValueError:
+        print("dont understand")
+    except sr.RequestError as e:
+        print("error; {0}".format(e))
